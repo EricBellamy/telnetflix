@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf8">
+	<meta http-equiv="Content-Language" content="en_CA">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+
+	<title>Telnetflix</title>
+	<meta property="og:title" content="Telnetflix">
+	<meta property="og:description" content="Netflix, but text.">
+
+	<!-- Default Styles -->
+	<style>
+		html,
+		body,
+		html body * {
+			margin: 0;
+			padding: 0;
+			line-height: 1.25;
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			height: 100%;
+		}
+
+		video,
+		img {
+			vertical-align: top;
+			width: 100%;
+			height: auto;
+		}
+	</style>
+	<!-- Splash Styles -->
+	<style>
+		.hidden {
+			display: none;
+		}
+
+		body {
+			background: #000;
+			font-family: Helvetica, Arial, sans-serif;
+			color: #fff;
+
+			font-size: 14px;
+			max-height: 100%;
+		}
+
+		#splash,
+		#illegal-content {
+			height: 100%;
+		}
+
+		#illegal-content {
+			position: relative;
+			z-index: 200;
+		}
+
+		#splash-video {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			max-width: 900px;
+			padding: 0 1rem;
+		}
+
+		#telnetflix-video {
+			position: relative;
+			z-index: 5;
+		}
+
+		#telnetflix-video-disappear {
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+
+			opacity: 0;
+			animation: fadeIn 0.1s ease-out 0.6s 1 forwards;
+		}
+
+		#splash-video-button {
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translate(-50%, 0);
+			color: #E32414;
+			background: #fff;
+			font-weight: 900;
+			padding: 0.75rem 3rem;
+			cursor: pointer;
+			animation: fadeIn 0.6s ease-out 2s 1 forwards;
+			opacity: 0;
+			font-size: 100%;
+			transition: opacity .6s ease, transform .4s ease;
+		}
+
+		#splash-video-button.show {
+			opacity: 1;
+		}
+
+		#splash-video-button.fade {
+			cursor: default;
+			animation: fadeOut 0.6s ease-out 0s 1 forwards;
+			transform: translate(-50%, 10%);
+		}
+
+		.abs-center {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.fixed-center {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.fixed-top {
+			position: fixed;
+			top: 0;
+			left: 50%;
+			transform: translate(-50%, 0);
+		}
+
+		.fixed-bottom {
+			position: fixed;
+			bottom: 0;
+			left: 50%;
+			transform: translate(-50%, 0);
+		}
+
+		.fade {
+			opacity: 0;
+		}
+
+		.relative {
+			position: relative;
+		}
+
+		.noselect {
+			-webkit-touch-callout: none;
+			/* iOS Safari */
+			-webkit-user-select: none;
+			/* Safari */
+			-khtml-user-select: none;
+			/* Konqueror HTML */
+			-moz-user-select: none;
+			/* Old versions of Firefox */
+			-ms-user-select: none;
+			/* Internet Explorer/Edge */
+			user-select: none;
+			/* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+		}
+
+		.d-flex {
+			display: flex;
+		}
+
+		.column {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.w-100 {
+			width: 100%;
+		}
+
+		.asset {
+			opacity: 0;
+		}
+
+		@keyframes fadeIn {
+			0% {
+				opacity: 0;
+			}
+
+			100% {
+				opacity: 1;
+			}
+		}
+
+		@keyframes fadeOut {
+			0% {
+				opacity: 1;
+			}
+
+			100% {
+				opacity: 0;
+			}
+		}
+
+		#detailNav {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			color: #ff2905 !important;
+			z-index: 100;
+			transition: opacity .3s ease;
+		}
+		#detailNav a {
+			display: block;
+			padding: 1rem;
+			text-decoration: none;
+			opacity: 0.2;
+		}
+
+		#detailNav a:link,
+		#detailNav a:visited {
+			color: #ff2905;
+		}
+
+		#detailNav a:hover {
+			opacity: 0.4;
+		}
+	</style>
+	<!-- Responsive Styles -->
+	<style>
+		#illegalContentWrapper {
+			position: relative;
+			transform: none;
+			left: auto;
+			top: auto;
+			padding-top: 60px;
+		}
+
+		@media screen and (min-width: 500px) {
+			body {
+				font-size: 16px;
+			}
+		}
+	</style>
+	<!-- Transition Styles -->
+	<style>
+		.actionable {
+			position: relative;
+		}
+
+		.current {
+			display: block;
+			opacity: 1;
+		}
+
+		.next {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			display: block;
+			opacity: 0;
+		}
+
+		.current,
+		.next {
+			transform: translate3d(0, 0, 0);
+			will-change: opacity, transform;
+		}
+	</style>
+</head>
+
+<body class='noselect'>
+	<div id='splash'>
+		<div id='webgl-test'>
+			<div id='backgroundAssets'></div>
+			<div id='posterAssets'></div>
+
+			<!-- The noise map -->
+			<img crossOrigin="anonymous" src='assets/webgl/poster_noise.png' class="displacementMap asset d-none" />
+			<!-- WebGL Canvas -->
+			<canvas id="webgl_intro_scroller" class='z-n1000' style="width: 100%; height: 100%; border: none;"></canvas>
+		</div>
+		<div id='splash-video' class=''>
+			<div class='relative'>
+				<video id='telnetflix-video' playsinline autoplay muted>
+					<source src="assets/logo/telnetflix.mp4" type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
+				<video id='telnetflix-video-disappear' poster='assets/logo/telnetflix_disappear.jpg' playsinline muted>
+					<source src="assets/logo/telnetflix_disappear.mp4" type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
+			</div>
+			<div id='splash-video-button'>ENTER</div>
+		</div>
+		<div id='illegal-content' class='hidden'>
+			<div class='fixed-top' id='telnetflix-fixed-logo'>
+				<img src='assets/logo/telnetflix.png' />
+			</div>
+			<div class='abs-center w-100' id='illegalContentWrapper'>
+				<div class='column' id='illegalContentColumns'>
+					<div class='column' id='moviePoster'>
+						<img style='opacity: 0; transition: opacity 1.2s ease;' id='posterBlur'
+							src='assets/movies/shrek/poster.jpg' />
+						<img style='opacity: 0; transition: opacity 1.2s ease;' id='posterTransitionBlur'
+							src='assets/movies/my_neighbour_totoro/poster.jpg' />
+						<canvas id="webglPosterImage" class='z-n1000'
+							style="width: 100%; height: 100%; border: none;"></canvas>
+					</div>
+					<div class='column' id='movieContent'>
+						<h1 class='actionable' id='movieTitle'>
+							<span class='current' data-post-transform='translate3d(0,20%,0)' data-pre-opacity='1'
+								data-post-opacity='0'></span>
+							<span class='next' data-pre-transform='translate3d(5%,0,0)'
+								data-post-transform='translate3d(0,0,0)' data-pre-opacity='0' data-post-opacity='1'
+								data-delay='800'></span>
+						</h1>
+						<!-- Mobile tags -->
+
+						<p class='actionable' id='movieDesc'>
+							<span class='current' data-post-transform='translate3d(0,20%,0)' data-pre-opacity='1'
+								data-post-opacity='0' data-delay='50'></span>
+							<span class='next' data-pre-transform='translate3d(5%,0,0)'
+								data-post-transform='translate3d(0,0,0)' data-pre-opacity='0' data-post-opacity='1'
+								data-delay='800'></span>
+						</p>
+						<div class='d-flex' id='movieCode' style='opacity: 0; transition-delay: 0.2s;'>
+							<div class='d-flex' id='copyableContainer'>
+								<div class='column commandWrapper'>
+									<span class='actionable'>
+										<span class='current copyable' data-pre-opacity='1' data-post-opacity='0'
+											data-delay='100'></span>
+										<span class='next copyable' data-pre-opacity='0' data-post-opacity='1'
+											data-delay='800'></span>
+									</span>
+								</div>
+								<div class='column'>
+									<img class='icon' src='assets/icons/clipboard.png' />
+								</div>
+							</div>
+						</div>
+						<div id='movieStarHeader' class='actionable'>
+							<span class='current title' data-pre-opacity='1' data-post-opacity='0'
+								data-delay='150'></span>
+							<span class='next title' data-pre-opacity='0' data-post-opacity='1' data-delay='800'></span>
+						</div>
+						<div class='d-flex' id='movieStars'>
+							<p class='actionable movie-star'>
+								<span class='current' data-post-transform='translate3d(0,20%,0)' data-pre-opacity='1'
+									data-post-opacity='0' data-delay='150'></span>
+								<span class='next' data-pre-transform='translate3d(0,20%,0)'
+									data-post-transform='translate3d(0,0,0)' data-pre-opacity='0' data-post-opacity='1'
+									data-delay='800'></span>
+							</p>
+							<p class='actionable movie-star'>
+								<span class='current' data-post-transform='translate3d(0,20%,0)' data-pre-opacity='1'
+									data-post-opacity='0' data-delay='150'></span>
+								<span class='next' data-pre-transform='translate3d(0,20%,0)'
+									data-post-transform='translate3d(0,0,0)' data-pre-opacity='0' data-post-opacity='1'
+									data-delay='800'></span>
+							</p>
+							<p class='actionable movie-star'>
+								<span class='current' data-post-transform='translate3d(0,20%,0)' data-pre-opacity='1'
+									data-post-opacity='0' data-delay='150'></span>
+								<span class='next' data-pre-transform='translate3d(0,20%,0)'
+									data-post-transform='translate3d(0,0,0)' data-pre-opacity='0' data-post-opacity='1'
+									data-delay='800'></span>
+							</p>
+						</div>
+						<div class='d-flex' id='movieCategories'>
+							<p class='actionable movie-category'>
+								<span class='current' data-pre-opacity='1' data-post-opacity='0'
+									data-delay='200'></span>
+								<span class='next' data-pre-opacity='0' data-post-opacity='1' data-delay='800'></span>
+							</p>
+							<p class='actionable movie-category'>
+								<span class='current' data-pre-opacity='1' data-post-opacity='0'
+									data-delay='200'></span>
+								<span class='next' data-pre-opacity='0' data-post-opacity='1' data-delay='800'></span>
+							</p>
+							<p class='actionable movie-category'>
+								<span class='current' data-pre-opacity='1' data-post-opacity='0'
+									data-delay='200'></span>
+								<span class='next' data-pre-opacity='0' data-post-opacity='1' data-delay='800'></span>
+							</p>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+			<div class='fixed-bottom d-flex' id='telnetflixMobileToggles'>
+				<div class='column toggle left-toggle disabled'>Previous</div>
+				<div class='column toggle right-toggle'>Next</div>
+			</div>
+			<div class='fixed-bottom d-flex' id='telnetflixDesktopIcons'></div>
+			<div id='detailNav'>
+				<a href='https://github.com/aidancrowther/ASCIIPlay'>GITHUB</a>
+			</div>
+			<div class='d-flex' id='telnetflixDesktopToggles'>
+				<div class='column toggle left-toggle disabled'>
+					<img src='/assets/icons/left-arrow.png' />
+				</div>
+				<div class='column toggle right-toggle'>
+					<img src='/assets/icons/right-arrow.png' />
+				</div>
+			</div>
+		</div>
+	</div>
+	<noscript id="deferred-styles">
+		<link rel="stylesheet" type="text/css" href="/css/poubelle.css" />
+	</noscript>
+	<script async defer>
+		var loadDeferredStyles = function () {
+			var addStylesNode = document.getElementById("deferred-styles");
+			var replacement = document.createElement("div");
+			replacement.innerHTML = addStylesNode.textContent;
+			document.body.appendChild(replacement)
+			addStylesNode.parentElement.removeChild(addStylesNode);
+		};
+		var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+			window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+		if (raf) raf(function () { window.setTimeout(loadDeferredStyles, 0); });
+		else window.addEventListener('load', loadDeferredStyles);
+		[
+			'/js/index.js',
+			'/js/webgl.js'
+		].forEach(function (src) {
+			var script = document.createElement('script');
+			script.src = src;
+			script.async = false;
+			document.head.appendChild(script);
+		});
+	</script>
+	<script type="text/javascript" async defer>
+		var adblock = true;
+	</script>
+</body>
+
+</html>

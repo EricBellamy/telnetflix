@@ -1,0 +1,418 @@
+/* Movie Styles */
+
+#illegalContentWrapper {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+#telnetflix-fixed-logo {
+	width: 160px;
+	opacity: 0;
+	transform: translate(-50%, 10%);
+	transition: opacity .6s ease, transform .6s ease;
+}
+
+#telnetflix-fixed-logo.enabled {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+#illegalContentColumns {
+	padding-bottom: 6rem;
+}
+
+#moviePoster {
+	position: relative;
+}
+
+#posterBlur, #posterTransitionBlur {
+	width: 100%;
+	height: 100%;
+	filter: blur(15px);
+	z-index: -1;
+	will-change: opacity;
+}
+
+#posterTransitionBlur {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 15;
+}
+
+#movieTitle {
+	font-size: 260%;
+	font-weight: 900;
+	margin-bottom: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	letter-spacing: 0.04em;
+	text-shadow: 4px 4px rgba(255, 255, 255, 0.1);
+	margin-top: 10px;
+}
+
+#movieTitle .current.enabled {
+	opacity: 1;
+}
+
+#movieDesc {
+	font-size: 110%;
+	margin-bottom: 10px;
+	opacity: 0.7;
+}
+
+#movieCode {
+	font-size: 100%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	transition: opacity .6s ease;
+}
+
+#movieCode>.d-flex {
+	position: relative;
+	padding: 1rem 1.5rem;
+	cursor: pointer;
+	width: 100%;
+}
+
+#movieCode>.d-flex:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #111;
+	opacity: 0.9;
+	z-index: -100;
+}
+
+#movieCode .commandWrapper {
+	margin-right: 1.5rem;
+	opacity: 0.4;
+	flex: 1;
+}
+
+#movieCode>.d-flex:hover .commandWrapper {
+	opacity: 1;
+}
+
+#movieCode .icon {
+	width: 1.25rem;
+	opacity: 0.6;
+}
+
+#movieCode>.d-flex:hover .icon {
+	opacity: 1;
+}
+
+#movieStarHeader {
+	margin-bottom: 10px;
+}
+
+#movieStarHeader .title {
+	font-weight: 500;
+	font-size: 100%;
+}
+
+#movieStars {
+	margin-bottom: 40px;
+}
+
+.movie-star {
+	margin-right: 20px;
+	opacity: 0.5;
+	font-weight: 900;
+}
+
+#movieCategories {
+	flex-wrap: wrap;
+}
+
+.movie-category {
+	margin-right: 20px;
+	margin-top: 10px;
+	font-weight: 900;
+	color: #F8C756;
+	font-size: 100%;
+	line-height: 1;
+}
+
+#telnetflixMobileToggles {
+	width: 100%;
+	padding-top: 1.5rem;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	opacity: 0;
+	transition: opacity .6s ease;
+}
+
+#telnetflixMobileToggles:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 101%;
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000 70%);
+	opacity: 1;
+	z-index: -1;
+}
+
+#telnetflixMobileToggles .toggle {
+	flex: 1;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	position: relative;
+	font-size: 90%;
+	cursor: pointer;
+	transition: opacity .3s ease;
+}
+
+#telnetflixMobileToggles .toggle:first-child {
+	margin-right: 2.5px;
+}
+
+#telnetflixMobileToggles .toggle:last-child {
+	margin-left: 2.5px;
+}
+
+#telnetflixMobileToggles .toggle:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #1a1a1a;
+	opacity: 0.9;
+	z-index: -1;
+}
+
+#telnetflixMobileToggles .toggle.disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+#telnetflixDesktopToggles {
+	display: none;
+	opacity: 0;
+	transition: opacity .6s ease;
+}
+
+#telnetflixDesktopToggles .toggle img {
+	width: auto;
+	height: 3rem;
+}
+
+#telnetflixDesktopToggles .toggle {
+	padding: 2rem;
+	cursor: pointer;
+	transition: opacity .3s ease;
+}
+
+#telnetflixDesktopToggles .left-toggle {
+	position: fixed;
+	top: 50%;
+	left: 0;
+	transform: translate(0, -50%);
+}
+
+#telnetflixDesktopToggles .right-toggle {
+	position: fixed;
+	top: 50%;
+	right: 0;
+	transform: translate(0, -50%);
+}
+
+#telnetflixDesktopToggles .toggle.disabled {
+	opacity: 0.05;
+	cursor: default;
+}
+
+#telnetflixDesktopIcons {
+	display: none;
+	margin: 1rem;
+	opacity: 0;
+	transition: opacity 0.6s ease;
+}
+
+#telnetflixDesktopIcons.enabled {
+	opacity: 1;
+}
+
+#telnetflixDesktopIcons .icon {
+	padding: 1rem;
+	cursor: pointer;
+}
+
+#telnetflixDesktopIcons .icon.disabled {
+	opacity: 0.2;
+}
+
+#telnetflixDesktopIcons .icon.disabled:hover {
+	opacity: 0.5;
+}
+
+#telnetflixDesktopIcons .icon img {
+	width: 20px;
+	height: 20px;
+}
+
+/* == Movie Styles == */
+
+/* WebGL Styles */
+
+#webgl-test {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: -1;
+}
+
+#webgl-test.enabled {
+	z-index: 100;
+}
+
+#webgl_intro_scroller {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#webglPosterImage {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#posterAssets img {
+	display: inline;
+}
+
+/* == WebGL Styles == */
+
+/* Responsive Styles */
+
+/* iPhone 6/7/8 */
+@media screen and (min-width: 330px) {
+	#telnetflix-fixed-logo {
+		width: 160px;
+	}
+
+	#movieTitle {
+		font-size: 300%;
+	}
+
+	#telnetflixMobileToggles .toggle {
+		padding: 0.8rem;
+	}
+}
+
+/* iPhone X */
+@media screen and (min-width: 330px) and (max-width: 380px) and (min-height: 720px) {
+	#telnetflixMobileToggles .toggle {
+		padding: 1rem;
+		font-size: 95%;
+	}
+}
+
+/* iPhone Plus */
+@media screen and (min-width: 380px) {}
+
+/* iPad */
+@media screen and (min-width: 540px) {
+	#illegalContentWrapper {
+		max-width: 540px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	#telnetflixMobileToggles .toggle {
+		padding: 1rem;
+		font-size: 110%;
+	}
+}
+
+/* All desktop */
+@media screen and (min-width: 800px) {
+
+	#movieTitle {
+		font-size: 300%;
+	}
+
+	.movie-category {
+		font-size: 130%;
+	}
+
+	#movieDesc {
+		font-size: 120%;
+		margin-bottom: 40px;
+	}
+}
+
+/* Desktop Layout */
+@media screen and (min-width: 1000px) {
+	body {
+		overflow: hidden;
+	}
+
+	#telnetflix-fixed-logo {
+		width: 240px;
+		margin-top: 20px;
+	}
+
+	#telnetflixDesktopToggles {
+		display: block !important;
+	}
+
+	#telnetflixDesktopIcons {
+		display: flex !important;
+	}
+
+	#movieContent {
+		width: 60%;
+		min-width: 60%;
+	}
+
+	#illegalContentColumns {
+		flex-direction: row;
+		margin-bottom: 0;
+		padding-bottom: 0 !important;
+	}
+
+	#illegalContentWrapper {
+		max-width: 1190px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		padding-top: 0;
+		padding-left: 6rem !important;
+		padding-right: 6rem !important;
+	}
+
+	#telnetflixMobileToggles {
+		display: none;
+		z-index: 40;
+	}
+
+	#moviePoster {
+		margin-right: 40px;
+	}
+
+	#movieCode>.d-flex {
+		width: auto;
+	}
+
+	#movieCode>.d-flex:before {
+		background: #fff;
+		opacity: 0.07;
+	}
+}
+/* == Reponsive Styles == */
